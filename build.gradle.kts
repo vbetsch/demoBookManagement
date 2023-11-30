@@ -1,5 +1,3 @@
-import com.x3t.gradle.plugins.openapi.OpenapiDiffPluginTask
-import io.gitlab.arturbosch.detekt.Detekt
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
