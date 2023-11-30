@@ -58,7 +58,7 @@ tasks.withType<Test> {
 }
 
 tasks.register<JacocoReport>("jacocoFullReport") {
-    executionData(tasks.named("test").get(), tasks.named("testIntegration").get(), tasks.named("testComponent").get())
+    executionData(tasks.named("test").get())
     sourceSets(sourceSets["main"])
 
     reports {
@@ -73,7 +73,7 @@ pitest {
     avoidCallsTo.set(setOf("kotlin.jvm.internal"))
     mutators.set(setOf("STRONGER"))
     threads.set(Runtime.getRuntime().availableProcessors())
-    testSourceSets.addAll(sourceSets["test"], sourceSets["testIntegration"])
+    testSourceSets.addAll(sourceSets["test"])
     mainSourceSets.addAll(sourceSets["main"])
     outputFormats.addAll("XML", "HTML")
     excludedClasses.add("**BookManagementApplication")
