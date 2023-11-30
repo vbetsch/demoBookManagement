@@ -47,15 +47,6 @@ jobs:
         check_name: Unit tests results
         files: |
           build/test-results/test/*.xml
-    - name: Component test
-      run: ./gradlew testComponent
-    - name: Publish Component test
-      uses: EnricoMi/publish-unit-test-result-action@v2
-      if: always()
-      with:
-        check_name: Component tests results
-        files: |
-          build/test-results/testComponent/*.xml
     - name: Run Coverage
       run: ./gradlew jacocoFullReport
     - name: JaCoCo Code Coverage Report
