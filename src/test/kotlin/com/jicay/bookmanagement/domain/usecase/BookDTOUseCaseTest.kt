@@ -12,14 +12,15 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.justRun
 import io.mockk.verify
-import net.jqwik.api.*
+import net.jqwik.api.Arbitrary
 import net.jqwik.api.Combinators.combine
-import net.jqwik.api.lifecycle.AfterProperty
+import net.jqwik.api.ForAll
+import net.jqwik.api.Property
+import net.jqwik.api.Provide
 import net.jqwik.api.lifecycle.BeforeProperty
 import net.jqwik.kotlin.api.any
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import java.util.*
 
 
 @ExtendWith(MockKExtension::class)
@@ -33,13 +34,16 @@ class BookDTOUseCaseTest {
 
     @Test
     fun `get all books should returns all books sorted by name`() {
+        // Arrange
         every { bookPort.getAllBooks() } returns listOf(
             Book("Les Misérables", "Victor Hugo"),
             Book("Hamlet", "William Shakespeare")
         )
 
+        // Act
         val res = bookUseCase.getAllBooks()
 
+        // Assert
         assertThat(res).containsExactly(
             Book("Hamlet", "William Shakespeare"),
             Book("Les Misérables", "Victor Hugo")

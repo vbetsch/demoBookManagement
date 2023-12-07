@@ -27,8 +27,20 @@ configurations {
     }
 }
 
+
+sourceSets {
+    create("testIntegration") {
+        compileClasspath += sourceSets.main.get().output
+        runtimeClasspath += sourceSets.main.get().output
+    }
+}
+
 repositories {
     mavenCentral()
+}
+
+val testIntegrationImplementation: Configuration by configurations.getting {
+    extendsFrom(configurations.implementation.get())
 }
 
 dependencies {
@@ -44,6 +56,18 @@ dependencies {
     testImplementation("com.willowtreeapps.assertk:assertk:0.27.0")
     testImplementation("info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.15.0")
     testImplementation("net.jqwik:jqwik-kotlin:1.8.1")
+
+    testIntegrationImplementation("io.mockk:mockk:1.13.8")
+    testIntegrationImplementation("com.willowtreeapps.assertk:assertk:0.27.0")
+    testIntegrationImplementation("com.ninja-squad:springmockk:4.0.2")
+    testIntegrationImplementation("org.springframework.boot:spring-boot-starter-test") {
+        exclude(module = "mockito-core")
+    }
+    testIntegrationImplementation("org.testcontainers:postgresql:1.19.1")
+    testIntegrationImplementation("org.testcontainers:junit-jupiter:1.19.1")
+    testIntegrationImplementation("org.testcontainers:jdbc-test:1.12.0")
+    testIntegrationImplementation("org.testcontainers:testcontainers:1.19.1")
+    testIntegrationImplementation("info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.15.0")
 }
 
 tasks.withType<KotlinCompile> {
@@ -51,6 +75,12 @@ tasks.withType<KotlinCompile> {
         freeCompilerArgs += "-Xjsr305=strict"
         jvmTarget = "17"
     }
+}
+
+task<Test>("testIntegration") {
+    useJUnitPlatform()
+    testClassesDirs = sourceSets["testIntegration"].output.classesDirs
+    classpath = sourceSets["testIntegration"].runtimeClasspath
 }
 
 tasks.withType<Test> {
