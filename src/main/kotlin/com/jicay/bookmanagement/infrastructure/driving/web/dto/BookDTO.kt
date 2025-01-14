@@ -1,4 +1,4 @@
-package com.jicay.bookmanagement.infrastructure.driver.web.dto
+package com.jicay.bookmanagement.infrastructure.driving.web.dto
 
 import com.jicay.bookmanagement.domain.model.Book
 
