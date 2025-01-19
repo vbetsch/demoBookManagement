@@ -2,12 +2,18 @@ package com.jicay.bookmanagement.infrastructure.driven.adapter
 
 import com.jicay.bookmanagement.domain.model.Book
 import com.jicay.bookmanagement.domain.port.BookPort
+import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Service
 
 @Service
 class BookDAO(private val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) : BookPort {
+
+    private fun throwBookNotFound(id: Int): Nothing {
+        throw NoSuchElementException("Book not found with id $id")
+    }
+
     override fun getAllBooks(): List<Book> {
         return namedParameterJdbcTemplate
             .query("SELECT * FROM BOOK", MapSqlParameterSource()) { rs, _ ->
@@ -31,17 +37,20 @@ class BookDAO(private val namedParameterJdbcTemplate: NamedParameterJdbcTemplate
     }
 
     override fun getBook(id: Int): Book {
-        return namedParameterJdbcTemplate.queryForObject(
-            "SELECT * FROM BOOK WHERE id = :id",
-            MapSqlParameterSource().addValue("id", id)
-        ) { rs, _ ->
-            Book(
-                name = rs.getString("title"),
-                author = rs.getString("author"),
-                reserved = rs.getBoolean("reserved")
-            )
+        return try {
+            namedParameterJdbcTemplate.queryForObject(
+                "SELECT * FROM BOOK WHERE id = :id",
+                MapSqlParameterSource().addValue("id", id)
+            ) { rs, _ ->
+                Book(
+                    name = rs.getString("title"),
+                    author = rs.getString("author"),
+                    reserved = rs.getBoolean("reserved")
+                )
+            } ?: throwBookNotFound(id)
+        } catch (e: EmptyResultDataAccessException) {
+            throwBookNotFound(id)
         }
-            ?: throw NoSuchElementException("Book not found with id $id")
     }
 
     override fun updateBook(id: Int, data: Book) {
@@ -59,7 +68,7 @@ class BookDAO(private val namedParameterJdbcTemplate: NamedParameterJdbcTemplate
         )
 
         if (rowsAffected == 0) {
-            throw NoSuchElementException("Book not found with id $id")
+            throwBookNotFound(id)
         }
     }
 }

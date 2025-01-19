@@ -98,11 +98,9 @@ class BookDAOIT(
         }
 
         test("get book with non-existing book") {
-            val id = 999 // non-existing id
-
             // WHEN/THEN
             shouldThrow<NoSuchElementException> {
-                bookDAO.getBook(id)
+                bookDAO.getBook(999)
             }
         }
 
