@@ -39,11 +39,12 @@ class BookUseCaseTest : FunSpec({
     }
 
     test("reserve book") {
-        justRun { bookPort.getBook(any()) }
-        justRun { bookPort.updateBook(any()) }
+        val book = Book("Les Misérables", "Victor Hugo", false)
+
+        every { bookPort.getBook(any()) } returns book
+        justRun { bookPort.updateBook(any(), any()) }
 
         val id = 1
-        val book = Book("Les Misérables", "Victor Hugo", false)
 
         bookUseCase.reserveBook(id)
 
