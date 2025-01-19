@@ -2,6 +2,7 @@ package com.jicay.bookmanagement.infrastructure.driving.web
 
 import com.jicay.bookmanagement.domain.model.Book
 import com.jicay.bookmanagement.domain.usecase.BookUseCase
+import com.jicay.bookmanagement.infrastructure.driving.web.exceptions.BookAlreadyReservedException
 import com.ninjasquad.springmockk.MockkBean
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.extensions.spring.SpringExtension
@@ -104,6 +105,19 @@ class BookControllerIT(
         mockMvc.post("/books/${id}/reserve")
             .andExpect {
                 status { isOk() }
+            }
+
+        verify(exactly = 1) { bookUseCase.reserveBook(id) }
+    }
+
+    test("rest route reserve book should return error if book is already reserved") {
+        val id = 1
+
+        every { bookUseCase.reserveBook(id) } throws BookAlreadyReservedException("Book with ID $id is already reserved.")
+
+        mockMvc.post("/books/${id}/reserve")
+            .andExpect {
+                status { isConflict() }
             }
 
         verify(exactly = 1) { bookUseCase.reserveBook(id) }

@@ -2,17 +2,21 @@ package com.jicay.bookmanagement.domain.usecase
 
 import com.jicay.bookmanagement.domain.model.Book
 import com.jicay.bookmanagement.domain.port.BookPort
+import com.jicay.bookmanagement.infrastructure.driving.web.exceptions.BookAlreadyReservedException
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldContainExactly
-import io.mockk.every
-import io.mockk.justRun
-import io.mockk.mockk
-import io.mockk.verify
+import io.kotest.matchers.shouldBe
+import io.mockk.*
 
 class BookUseCaseTest : FunSpec({
 
     val bookPort = mockk<BookPort>()
     val bookUseCase = BookUseCase(bookPort)
+
+    beforeTest {
+        clearMocks(bookPort)
+    }
 
     test("get all books should returns all books sorted by name") {
         every { bookPort.getAllBooks() } returns listOf(
@@ -52,4 +56,18 @@ class BookUseCaseTest : FunSpec({
         verify(exactly = 1) { bookPort.updateBook(id, Book(name = book.name, author = book.author, reserved = true)) }
     }
 
+    test("reserve book should return error") {
+        val book = Book("Les Misérables", "Victor Hugo", true)
+        val id = 1
+
+        every { bookPort.getBook(id) } returns book
+
+        shouldThrow<BookAlreadyReservedException> {
+            bookUseCase.reserveBook(id)
+        }.apply {
+            message shouldBe "Book with ID $id is already reserved."
+        }
+
+        verify(exactly = 1) { bookPort.getBook(id) }
+    }
 })
