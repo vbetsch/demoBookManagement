@@ -19,7 +19,7 @@ class BookUseCase(
     }
 
     fun reserveBook(id: Int) {
-        val book = bookPort.getBook(id) ?: throw BookNotFoundException("Book not found")
+        val book = bookPort.getBook(id) ?: throw BookNotFoundException("Book with id $id not found")
         if (book.reserved) {
             throw BookAlreadyReservedException("Book with ID $id is already reserved.")
         }

@@ -78,7 +78,7 @@ class BookDAOIT(
         }
 
         test("get book") {
-            val id = 1
+            val id = 10
 
             // GIVEN
             performQuery(
@@ -86,7 +86,10 @@ class BookDAOIT(
                 """
                insert into book (id, title, author, reserved)
                values 
-                   ($id, 'Le Petit Prince', 'Saint-Exupéry', false);
+                ($id, 'Le Petit Prince', 'Saint-Exupéry', false),
+                (1, 'Hamlet', 'Shakespeare', false),
+                (2, 'Les fleurs du mal', 'Beaudelaire', false),
+                (3, 'Harry Potter', 'Rowling', false);
                """.trimIndent()
             )
 
