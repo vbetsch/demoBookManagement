@@ -21,10 +21,13 @@ test:
 testIntegration:
 	./gradlew testIntegration
 
-.PHONY: test testIntegration
+testComponent:
+	./gradlew testComponent
+
+.PHONY: test testIntegration testComponent
 
 
 # Aliases
 build-dependencies: refresh-dependencies dependencies
-all-tests: test testIntegration
+all-tests: test testIntegration testComponent
 .PHONY: build-dependencies all-tests
