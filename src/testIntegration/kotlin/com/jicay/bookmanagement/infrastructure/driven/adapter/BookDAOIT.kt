@@ -98,10 +98,11 @@ class BookDAOIT(
         }
 
         test("get book with non-existing book") {
-            // WHEN/THEN
-            shouldThrow<NoSuchElementException> {
-                bookDAO.getBook(999)
-            }
+            // WHEN
+            val res = bookDAO.getBook(999)
+
+            // THEN
+            res shouldBe null
         }
 
         test("update book") {
