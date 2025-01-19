@@ -77,7 +77,7 @@ class BookDAOIT(
             }
         }
 
-        test("get book") {
+        test("find book by id") {
             val id = 10
 
             // GIVEN
@@ -100,9 +100,67 @@ class BookDAOIT(
             res shouldBe Book("Le Petit Prince", "Saint-Exupéry", false)
         }
 
-        test("get book with non-existing book") {
+        test("find book with non-existing id") {
+            // GIVEN
+            performQuery(
+                // language=sql
+                """
+               insert into book (id, title, author, reserved)
+               values 
+                (10, 'Le Petit Prince', 'Saint-Exupéry', false),
+                (1, 'Hamlet', 'Shakespeare', false),
+                (2, 'Les fleurs du mal', 'Beaudelaire', false),
+                (3, 'Harry Potter', 'Rowling', false);
+               """.trimIndent()
+            )
+
             // WHEN
             val res = bookDAO.findBookById(999)
+
+            // THEN
+            res shouldBe null
+        }
+
+        test("find book by name") {
+            val idBook = 10
+            val name = "Le Petit Prince"
+
+            // GIVEN
+            performQuery(
+                // language=sql
+                """
+               insert into book (id, title, author, reserved)
+               values 
+                (${idBook}, '${name}', 'Saint-Exupéry', false),
+                (1, 'Hamlet', 'Shakespeare', false),
+                (2, 'Les fleurs du mal', 'Beaudelaire', false),
+                (3, 'Harry Potter', 'Rowling', false);
+               """.trimIndent()
+            )
+
+            // WHEN
+            val res = bookDAO.findBookByName(name)
+
+            // THEN
+            res shouldBe idBook
+        }
+
+        test("find book with non-existing name") {
+            // GIVEN
+            performQuery(
+                // language=sql
+                """
+               insert into book (id, title, author, reserved)
+               values 
+                (10, 'Le Petit Prince', 'Saint-Exupéry', false),
+                (1, 'Hamlet', 'Shakespeare', false),
+                (2, 'Les fleurs du mal', 'Beaudelaire', false),
+                (3, 'Harry Potter', 'Rowling', false);
+               """.trimIndent()
+            )
+
+            // WHEN
+            val res = bookDAO.findBookByName("unknown")
 
             // THEN
             res shouldBe null

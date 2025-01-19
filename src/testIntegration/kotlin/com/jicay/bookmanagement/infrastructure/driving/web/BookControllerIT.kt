@@ -99,41 +99,56 @@ class BookControllerIT(
     }
 
     test("rest route reserve book") {
-        val id = 1
+        val name = "Le Petit Prince"
 
-        justRun { bookUseCase.reserveBookById(any()) }
+        justRun { bookUseCase.reserveBook(any()) }
 
-        mockMvc.post("/books/${id}/reserve")
+        mockMvc.post("/books/reserve?title=${name}")
             .andExpect {
                 status { isOk() }
             }
 
-        verify(exactly = 1) { bookUseCase.reserveBookById(id) }
+        verify(exactly = 1) { bookUseCase.reserveBook(name) }
     }
 
-    test("rest route reserve book should return error if book is not found") {
-        val id = 999
+    test("rest route reserve book should return error if book is not found with name") {
+        val name = "unknown"
 
-        every { bookUseCase.reserveBookById(id) } throws BookNotFoundException("Book with id $id not found")
+        every { bookUseCase.reserveBook(name) } throws BookNotFoundException("Book with name $name not found")
 
-        mockMvc.post("/books/${id}/reserve")
+        mockMvc.post("/books/reserve?title=${name}")
             .andExpect {
                 status { isNotFound() }
             }
 
-        verify(exactly = 1) { bookUseCase.reserveBookById(id) }
+        verify(exactly = 1) { bookUseCase.reserveBook(name) }
+    }
+
+    test("rest route reserve book should return error if book is not found with id") {
+        val name = "unknown"
+        val idBook = 999
+
+        every { bookUseCase.reserveBook(name) } throws BookNotFoundException("Book with id $idBook not found")
+
+        mockMvc.post("/books/reserve?title=${name}")
+            .andExpect {
+                status { isNotFound() }
+            }
+
+        verify(exactly = 1) { bookUseCase.reserveBook(name) }
     }
 
     test("rest route reserve book should return error if book is already reserved") {
-        val id = 1
+        val idBook = 1
+        val name = "Le Petit Prince"
 
-        every { bookUseCase.reserveBookById(id) } throws BookAlreadyReservedException("Book with ID $id is already reserved.")
+        every { bookUseCase.reserveBook(name) } throws BookAlreadyReservedException("Book with ID $idBook and name $name is already reserved.")
 
-        mockMvc.post("/books/${id}/reserve")
+        mockMvc.post("/books/reserve?title=${name}")
             .andExpect {
                 status { isConflict() }
             }
 
-        verify(exactly = 1) { bookUseCase.reserveBookById(id) }
+        verify(exactly = 1) { bookUseCase.reserveBook(name) }
     }
 })

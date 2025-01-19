@@ -54,7 +54,7 @@ class BookStepDefs {
     fun canReserveBook(title: String) {
         given()
             .`when`()
-            .post("/books/reserve?name=$title")
+            .post("/books/reserve?title=$title")
             .then()
             .statusCode(200)
     }
@@ -63,7 +63,7 @@ class BookStepDefs {
     fun cannotReserveBook(title: String) {
         given()
             .`when`()
-            .post("/books/reserve?name=$title")
+            .post("/books/reserve?title=$title")
             .then()
             .statusCode(409)
     }
