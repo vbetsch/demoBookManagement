@@ -4,9 +4,9 @@
 
 [![CI](https://github.com/vbetsch/demoBookManagement/actions/workflows/gradle.yml/badge.svg)](https://github.com/vbetsch/demoBookManagement/actions/workflows/gradle.yml)
 
-# MacOS & Linux
+## MacOS & Linux
 
-## Getting Started
+### Getting Started
 
 - Build application
 
@@ -19,3 +19,7 @@ make build
 ```bash
 make all-tests
 ```
+
+### Tools
+
+- [Gitmoji](https://gitmoji.dev/) for commits convention
