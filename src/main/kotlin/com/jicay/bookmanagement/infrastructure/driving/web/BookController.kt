@@ -3,8 +3,10 @@ package com.jicay.bookmanagement.infrastructure.driving.web
 import com.jicay.bookmanagement.domain.usecase.BookUseCase
 import com.jicay.bookmanagement.infrastructure.driving.web.dto.BookDTO
 import com.jicay.bookmanagement.infrastructure.driving.web.dto.toDto
+import com.jicay.bookmanagement.infrastructure.driving.web.exceptions.BookAlreadyReservedException
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.server.ResponseStatusException
 
 @RestController
 @RequestMapping("/books")
@@ -29,6 +31,10 @@ class BookController(
     @PostMapping("/{id}/reserve")
     @ResponseStatus(HttpStatus.OK)
     fun reserveBook(@PathVariable id: Int) {
-        bookUseCase.reserveBook(id)
+        try {
+            bookUseCase.reserveBook(id)
+        } catch (e: BookAlreadyReservedException) {
+            throw ResponseStatusException(HttpStatus.CONFLICT, e.message, e)
+        }
     }
 }
