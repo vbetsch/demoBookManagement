@@ -29,4 +29,37 @@ class BookDAO(private val namedParameterJdbcTemplate: NamedParameterJdbcTemplate
                 )
             )
     }
+
+    override fun getBook(id: Int): Book {
+        return namedParameterJdbcTemplate.queryForObject(
+            "SELECT * FROM BOOK WHERE id = :id",
+            MapSqlParameterSource().addValue("id", id)
+        ) { rs, _ ->
+            Book(
+                name = rs.getString("title"),
+                author = rs.getString("author"),
+                reserved = rs.getBoolean("reserved")
+            )
+        }
+            ?: throw NoSuchElementException("Book not found with id $id")
+    }
+
+    override fun updateBook(id: Int, data: Book) {
+        val rowsAffected = namedParameterJdbcTemplate.update(
+            """
+                UPDATE BOOK 
+                SET title = :title, author = :author, reserved = :reserved 
+                WHERE id = :id
+            """,
+            MapSqlParameterSource()
+                .addValue("id", id)
+                .addValue("title", data.name)
+                .addValue("author", data.author)
+                .addValue("reserved", data.reserved)
+        )
+
+        if (rowsAffected == 0) {
+            throw NoSuchElementException("Book not found with id $id")
+        }
+    }
 }

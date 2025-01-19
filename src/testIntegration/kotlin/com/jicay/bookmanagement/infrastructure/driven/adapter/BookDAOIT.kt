@@ -4,6 +4,8 @@ import com.jicay.bookmanagement.domain.model.Book
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import io.kotest.assertions.assertSoftly
+import io.kotest.assertions.throwables.shouldNotThrowAny
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.extensions.spring.SpringExtension
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
@@ -72,6 +74,64 @@ class BookDAOIT(
                 this["title"].shouldBe("Les misérables")
                 this["author"].shouldBe("Victor Hugo")
                 this["reserved"].shouldBe(false)
+            }
+        }
+
+        test("get book") {
+            val id = 1
+
+            // GIVEN
+            performQuery(
+                // language=sql
+                """
+               insert into book (id, title, author, reserved)
+               values 
+                   ($id, 'Le Petit Prince', 'Saint-Exupéry', false);
+               """.trimIndent()
+            )
+
+            // WHEN
+            val res = bookDAO.getBook(id)
+
+            // THEN
+            res shouldBe Book("Le Petit Prince", "Saint-Exupéry", false)
+        }
+
+        test("get book with non-existing book") {
+            val id = 999 // non-existing id
+
+            // WHEN/THEN
+            shouldThrow<NoSuchElementException> {
+                bookDAO.getBook(id)
+            }
+        }
+
+        test("update book") {
+            val id = 1
+            val newBook = Book("Le Petit Prince", "Conte d'Antoine de Saint-Exupéry", true)
+
+            // GIVEN
+            performQuery(
+                // language=sql
+                """
+               insert into book (id, title, author, reserved)
+               values 
+                   ($id, 'Le Petit Prince', 'Saint-Exupéry', false);
+               """.trimIndent()
+            )
+
+            // WHEN/THEN
+            shouldNotThrowAny {
+                bookDAO.updateBook(id, newBook)
+            }
+        }
+
+        test("update book with non-existing book") {
+            val id = 999 // non-existing id
+
+            // WHEN/THEN
+            shouldThrow<NoSuchElementException> {
+                bookDAO.updateBook(id, Book("Les misérables", "Victor Hugo", false))
             }
         }
 
