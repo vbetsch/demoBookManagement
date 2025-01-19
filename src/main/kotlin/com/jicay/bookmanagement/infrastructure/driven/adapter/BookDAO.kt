@@ -10,10 +10,6 @@ import org.springframework.stereotype.Service
 @Service
 class BookDAO(private val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) : BookPort {
 
-    private fun throwBookNotFound(id: Int): Nothing {
-        throw NoSuchElementException("Book not found with id $id")
-    }
-
     override fun getAllBooks(): List<Book> {
         return namedParameterJdbcTemplate
             .query("SELECT * FROM BOOK", MapSqlParameterSource()) { rs, _ ->
@@ -36,7 +32,7 @@ class BookDAO(private val namedParameterJdbcTemplate: NamedParameterJdbcTemplate
             )
     }
 
-    override fun getBook(id: Int): Book {
+    override fun getBook(id: Int): Book? {
         return try {
             namedParameterJdbcTemplate.queryForObject(
                 "SELECT * FROM BOOK WHERE id = :id",
@@ -47,9 +43,9 @@ class BookDAO(private val namedParameterJdbcTemplate: NamedParameterJdbcTemplate
                     author = rs.getString("author"),
                     reserved = rs.getBoolean("reserved")
                 )
-            } ?: throwBookNotFound(id)
+            }
         } catch (e: EmptyResultDataAccessException) {
-            throwBookNotFound(id)
+            null
         }
     }
 
@@ -68,7 +64,7 @@ class BookDAO(private val namedParameterJdbcTemplate: NamedParameterJdbcTemplate
         )
 
         if (rowsAffected == 0) {
-            throwBookNotFound(id)
+            throw NoSuchElementException("Book not found with id $id")
         }
     }
 }
