@@ -1,11 +1,21 @@
-# 📚 Book management application
+# demoBookManagement
+
+📚 Book management application
 
 [![CI](https://github.com/vbetsch/demoBookManagement/actions/workflows/gradle.yml/badge.svg)](https://github.com/vbetsch/demoBookManagement/actions/workflows/gradle.yml)
 
-Application de gestion de liste de livres
-Un livre est caractérisé par son titre et son auteur
+# MacOS & Linux
 
-Actions possibles :
+## Getting Started
 
-* Ajouter un livre
-* Lister tous les livres par ordre alphabétique
+- Build application
+
+```bash
+make build
+```
+
+- Run all tests
+
+```bash
+make all-tests
+```
