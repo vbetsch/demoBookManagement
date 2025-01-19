@@ -15,4 +15,10 @@ class BookUseCase(
     fun addBook(book: Book) {
         bookPort.createBook(book)
     }
+
+    fun reserveBook(id: Number) {
+        val book = bookPort.getBook(id)
+        // TODO: check availability
+        bookPort.updateBook(id, Book(name = book.name, author = book.author, reserved = true))
+    }
 }

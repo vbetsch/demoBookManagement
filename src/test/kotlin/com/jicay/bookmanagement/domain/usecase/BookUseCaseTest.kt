@@ -38,4 +38,17 @@ class BookUseCaseTest : FunSpec({
         verify(exactly = 1) { bookPort.createBook(book) }
     }
 
+    test("reserve book") {
+        justRun { bookPort.getBook(any()) }
+        justRun { bookPort.updateBook(any()) }
+
+        val id = 1
+        val book = Book("Les Misérables", "Victor Hugo", false)
+
+        bookUseCase.reserveBook(id)
+
+        verify(exactly = 1) { bookPort.getBook(id) }
+        verify(exactly = 1) { bookPort.updateBook(id, Book(name = book.name, author = book.author, reserved = true)) }
+    }
+
 })
