@@ -16,22 +16,22 @@ class BookUseCaseTest : FunSpec({
 
     test("get all books should returns all books sorted by name") {
         every { bookPort.getAllBooks() } returns listOf(
-            Book("Les Misérables", "Victor Hugo"),
-            Book("Hamlet", "William Shakespeare")
+            Book("Les Misérables", "Victor Hugo", false),
+            Book("Hamlet", "William Shakespeare", false)
         )
 
         val res = bookUseCase.getAllBooks()
 
         res.shouldContainExactly(
-            Book("Hamlet", "William Shakespeare"),
-            Book("Les Misérables", "Victor Hugo")
+            Book("Hamlet", "William Shakespeare", false),
+            Book("Les Misérables", "Victor Hugo", false)
         )
     }
 
     test("add book") {
         justRun { bookPort.createBook(any()) }
 
-        val book = Book("Les Misérables", "Victor Hugo")
+        val book = Book("Les Misérables", "Victor Hugo", false)
 
         bookUseCase.addBook(book)
 

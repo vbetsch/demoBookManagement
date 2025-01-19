@@ -55,10 +55,13 @@ class BookStepDefs {
         val expectedResponse = payload.joinToString(separator = ",", prefix = "[", postfix = "]") { line ->
             """
                 ${
-                    line.entries.joinToString(separator = ",", prefix = "{", postfix = "}") {
-                        """"${it.key}": "${it.value}""""
+                line.entries.joinToString(separator = ",", prefix = "{", postfix = "}") {
+                    when (val value = it.value) {
+                        "true", "false" -> """"${it.key}": $value"""
+                        else -> """"${it.key}": "$value""""
                     }
                 }
+            }
             """.trimIndent()
 
         }

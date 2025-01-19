@@ -40,7 +40,7 @@ class BookUseCasePropertyTest : FunSpec({
             for (i in 1..nbItems) {
                 val title = arb.next()
                 titles.add(title)
-                bookUseCase.addBook(Book(title, "Victor Hugo"))
+                bookUseCase.addBook(Book(title, "Victor Hugo", false))
             }
 
             val res = bookUseCase.getAllBooks()
