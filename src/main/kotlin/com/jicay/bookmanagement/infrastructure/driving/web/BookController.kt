@@ -26,13 +26,6 @@ class BookController(
     }
 
     @CrossOrigin
-    @GetMapping("/{id}")
-    fun findBookById(@PathVariable id: Int): BookDTO {
-        val book = bookUseCase.findBookById(id)
-        return book.toDto()
-    }
-
-    @CrossOrigin
     @PostMapping("/{id}/reserve")
     fun reserveBook(@PathVariable id: Int) {
         bookUseCase.reserveBook(id)

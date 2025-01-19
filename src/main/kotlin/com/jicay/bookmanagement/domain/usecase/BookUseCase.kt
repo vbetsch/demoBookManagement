@@ -25,8 +25,4 @@ class BookUseCase(
         }
         bookPort.updateBook(id, Book(name = book.name, author = book.author, reserved = true))
     }
-
-    fun findBookById(id: Int): Book {
-        return bookPort.getBook(id) ?: throw BookNotFoundException("Book not found")
-    }
 }
