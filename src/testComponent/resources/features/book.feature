@@ -8,3 +8,8 @@ Feature: the user can create and retrieve the books
       | name           | author      | reserved |
       | L'avare        | Molière     | false    |
       | Les Misérables | Victor Hugo | false    |
+
+  Scenario: user creates one book and reserve it
+    When the user creates the book "Le Petit Prince" written by "Victor Hugo"
+    And the user can reserves the book "Le Petit Prince"
+    And the user cannot reserves the book "Le Petit Prince"
