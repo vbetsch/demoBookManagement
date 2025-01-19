@@ -16,7 +16,7 @@ class BookUseCase(
         bookPort.createBook(book)
     }
 
-    fun reserveBook(id: Number) {
+    fun reserveBook(id: Int) {
         val book = bookPort.getBook(id)
         // TODO: check availability
         bookPort.updateBook(id, Book(name = book.name, author = book.author, reserved = true))

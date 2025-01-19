@@ -28,7 +28,7 @@ class BookController(
     @CrossOrigin
     @PostMapping("/{id}/reserve")
     @ResponseStatus(HttpStatus.OK)
-    fun reserveBook(@PathVariable id: Number) {
+    fun reserveBook(@PathVariable id: Int) {
         bookUseCase.reserveBook(id)
     }
 }
