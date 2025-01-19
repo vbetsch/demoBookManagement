@@ -18,10 +18,19 @@ class BookUseCase(
         bookPort.createBook(book)
     }
 
-    fun reserveBook(id: Int) {
-        val book = bookPort.getBook(id) ?: throw BookNotFoundException("Book with id $id not found")
+    fun reserveBookById(id: Int) {
+        val book = bookPort.findBookById(id) ?: throw BookNotFoundException("Book with id $id not found")
         if (book.reserved) {
             throw BookAlreadyReservedException("Book with ID $id is already reserved.")
+        }
+        bookPort.updateBook(id, Book(name = book.name, author = book.author, reserved = true))
+    }
+
+    fun reserveBookByName(name: String) {
+        val id = bookPort.findBookByName(name) ?: throw BookNotFoundException("Book with name $name not found")
+        val book = bookPort.findBookById(id) ?: throw BookNotFoundException("Book with id $id not found")
+        if (book.reserved) {
+            throw BookAlreadyReservedException("Book with name $name and id $id is already reserved.")
         }
         bookPort.updateBook(id, Book(name = book.name, author = book.author, reserved = true))
     }

@@ -12,6 +12,7 @@ import io.kotest.property.checkAll
 
 class InMemoryBookPort : BookPort {
     private val books = mutableListOf<Book>()
+    private val id = 1
     private var book: Book = Book("Les Misérables", "Victor Hugo", false)
 
     override fun getAllBooks(): List<Book> = books
@@ -20,7 +21,9 @@ class InMemoryBookPort : BookPort {
         books.add(book)
     }
 
-    override fun getBook(id: Int): Book = book
+    override fun findBookByName(name: String): Int? = id
+
+    override fun findBookById(id: Int): Book = book
 
     override fun updateBook(id: Int, data: Book) {
         book = Book(data.name, data.author, data.reserved)

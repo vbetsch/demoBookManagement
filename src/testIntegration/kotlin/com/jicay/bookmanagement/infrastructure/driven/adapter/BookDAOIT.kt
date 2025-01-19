@@ -94,7 +94,7 @@ class BookDAOIT(
             )
 
             // WHEN
-            val res = bookDAO.getBook(id)
+            val res = bookDAO.findBookById(id)
 
             // THEN
             res shouldBe Book("Le Petit Prince", "Saint-Exupéry", false)
@@ -102,7 +102,7 @@ class BookDAOIT(
 
         test("get book with non-existing book") {
             // WHEN
-            val res = bookDAO.getBook(999)
+            val res = bookDAO.findBookById(999)
 
             // THEN
             res shouldBe null

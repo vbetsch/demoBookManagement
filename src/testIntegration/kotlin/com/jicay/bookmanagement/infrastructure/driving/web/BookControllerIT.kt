@@ -101,39 +101,39 @@ class BookControllerIT(
     test("rest route reserve book") {
         val id = 1
 
-        justRun { bookUseCase.reserveBook(any()) }
+        justRun { bookUseCase.reserveBookById(any()) }
 
         mockMvc.post("/books/${id}/reserve")
             .andExpect {
                 status { isOk() }
             }
 
-        verify(exactly = 1) { bookUseCase.reserveBook(id) }
+        verify(exactly = 1) { bookUseCase.reserveBookById(id) }
     }
 
     test("rest route reserve book should return error if book is not found") {
         val id = 999
 
-        every { bookUseCase.reserveBook(id) } throws BookNotFoundException("Book with id $id not found")
+        every { bookUseCase.reserveBookById(id) } throws BookNotFoundException("Book with id $id not found")
 
         mockMvc.post("/books/${id}/reserve")
             .andExpect {
                 status { isNotFound() }
             }
 
-        verify(exactly = 1) { bookUseCase.reserveBook(id) }
+        verify(exactly = 1) { bookUseCase.reserveBookById(id) }
     }
 
     test("rest route reserve book should return error if book is already reserved") {
         val id = 1
 
-        every { bookUseCase.reserveBook(id) } throws BookAlreadyReservedException("Book with ID $id is already reserved.")
+        every { bookUseCase.reserveBookById(id) } throws BookAlreadyReservedException("Book with ID $id is already reserved.")
 
         mockMvc.post("/books/${id}/reserve")
             .andExpect {
                 status { isConflict() }
             }
 
-        verify(exactly = 1) { bookUseCase.reserveBook(id) }
+        verify(exactly = 1) { bookUseCase.reserveBookById(id) }
     }
 })

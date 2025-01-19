@@ -32,7 +32,20 @@ class BookDAO(private val namedParameterJdbcTemplate: NamedParameterJdbcTemplate
             )
     }
 
-    override fun getBook(id: Int): Book? {
+    override fun findBookByName(name: String): Int? {
+        return try {
+            namedParameterJdbcTemplate.queryForObject(
+                "SELECT * FROM BOOK WHERE title = :name",
+                MapSqlParameterSource().addValue("name", name)
+            ) { rs, _ ->
+                rs.getString("id").toInt()
+            }
+        } catch (e: EmptyResultDataAccessException) {
+            null
+        }
+    }
+
+    override fun findBookById(id: Int): Book? {
         return try {
             namedParameterJdbcTemplate.queryForObject(
                 "SELECT * FROM BOOK WHERE id = :id",

@@ -46,43 +46,43 @@ class BookUseCaseTest : FunSpec({
     test("reserve book") {
         val book = Book("Les Misérables", "Victor Hugo", false)
 
-        every { bookPort.getBook(any()) } returns book
+        every { bookPort.findBookById(any()) } returns book
         justRun { bookPort.updateBook(any(), any()) }
 
         val id = 1
 
-        bookUseCase.reserveBook(id)
+        bookUseCase.reserveBookById(id)
 
-        verify(exactly = 1) { bookPort.getBook(id) }
+        verify(exactly = 1) { bookPort.findBookById(id) }
         verify(exactly = 1) { bookPort.updateBook(id, Book(name = book.name, author = book.author, reserved = true)) }
     }
 
     test("reserve non-existing book should return error") {
         val id = 999
 
-        every { bookPort.getBook(id) } returns null
+        every { bookPort.findBookById(id) } returns null
 
         shouldThrow<BookNotFoundException> {
-            bookUseCase.reserveBook(id)
+            bookUseCase.reserveBookById(id)
         }.apply {
             message shouldBe "Book with id $id not found"
         }
 
-        verify(exactly = 1) { bookPort.getBook(id) }
+        verify(exactly = 1) { bookPort.findBookById(id) }
     }
 
     test("reserve reserved book should return error") {
         val book = Book("Les Misérables", "Victor Hugo", true)
         val id = 1
 
-        every { bookPort.getBook(id) } returns book
+        every { bookPort.findBookById(id) } returns book
 
         shouldThrow<BookAlreadyReservedException> {
-            bookUseCase.reserveBook(id)
+            bookUseCase.reserveBookById(id)
         }.apply {
             message shouldBe "Book with ID $id is already reserved."
         }
 
-        verify(exactly = 1) { bookPort.getBook(id) }
+        verify(exactly = 1) { bookPort.findBookById(id) }
     }
 })
